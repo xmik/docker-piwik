@@ -41,5 +41,11 @@ COPY docker-entrypoint.sh /entrypoint.sh
 # "/entrypoint.sh" will populate it at container startup from /usr/src/piwik
 VOLUME /var/www/html
 
+# Run apache2 on a custom port (8080), because openshift makes apache run
+# as a non-root user and he does not have access to port 80.
+# https://askubuntu.com/a/338239
+# https://github.com/openshift/origin/issues/6629
+RUN sed -i "s/Listen 80/Listen 8080/g" /etc/apache2/ports.conf && sed -i "s/<VirtualHost \*:80>/<VirtualHost \*:8080>/g" /etc/apache2/sites-enabled/000-default.conf
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["apache2-foreground"]

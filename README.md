@@ -1,3 +1,6 @@
+Forked from https://github.com/piwik/docker-piwikin order to make this docker
+ image runnable on OpenShift 3. Apache2 now runs on port: 8080.
+
 # Piwik
 
 [![Build Status](https://travis-ci.org/piwik/docker-piwik.svg?branch=master)](https://travis-ci.org/piwik/docker-piwik)
