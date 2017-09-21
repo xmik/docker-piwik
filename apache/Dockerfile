@@ -41,11 +41,19 @@ COPY docker-entrypoint.sh /entrypoint.sh
 # "/entrypoint.sh" will populate it at container startup from /usr/src/piwik
 VOLUME /var/www/html
 
+# For OpenShift:
 # Run apache2 on a custom port (8080), because openshift makes apache run
 # as a non-root user and he does not have access to port 80.
 # https://askubuntu.com/a/338239
 # https://github.com/openshift/origin/issues/6629
 RUN sed -i "s/Listen 80/Listen 8080/g" /etc/apache2/ports.conf && sed -i "s/<VirtualHost \*:80>/<VirtualHost \*:8080>/g" /etc/apache2/sites-enabled/000-default.conf
+# In order to drop the root user, we have to make some directories world
+# writeable as OpenShift default security model is to run the container under
+# random UID.
+RUN mkdir -p /var/run/apache2 && chmod 777 -R /var/run/apache2 &&\
+  mkdir -p /var/log/apache2 && chmod 777 -R /var/log/apache2 &&\
+  mkdir -p /var/lock/apache2 && chmod 777 -R /var/lock/apache2
+# Compare also with: https://github.com/sclorg/s2i-php-container/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["apache2-foreground"]
