@@ -1,4 +1,4 @@
-Forked from https://github.com/piwik/docker-piwikin order to make this docker
+Forked from https://github.com/piwik/docker-piwik in order to make this docker
  image runnable on OpenShift 3. Apache2 now runs on port: 8080.
 
 # Piwik
